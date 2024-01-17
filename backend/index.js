@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const { Todo } = require("./db");
 
 const app = express();
-const PORT = require("./config/index");
+const {PORT} = require("./config/index");
 
 app.use(express.json());
 
@@ -28,7 +28,7 @@ app.post("/todo", async function(req,res){
 
 
     res.json({
-        message: "Succeessfully added tehe todo"
+        message: "Succeessfully added to todo"
     })
 }) 
 
@@ -42,8 +42,8 @@ app.get("/todos", async function(req,res){
 })
 
 app.put("/completed", async function(req,res){
-    const id = req.body;
-    const valid = createTodo.safeParse(id);
+    const data = req.body;
+    const valid = updateTodo.safeParse(data);
 
     if(!valid.success){
         res.status(411).json({
@@ -51,10 +51,15 @@ app.put("/completed", async function(req,res){
         });
         return;
     }
+    
+    const id = data.id;
+    await Todo.findByIdAndUpdate(id, {completed: true});
 
-    await Todo.findOneAndUpdate({id}, {completed: true});
+    res.json({
+        message: "Successfully updated the task"
+    })
 })
 
 app.listen(PORT, ()=>{
-    console.log("Backend server started on PORT ",PORT);   
+    console.log("Backend server started on PORT",PORT);   
 });
