@@ -1,12 +1,14 @@
 const express = require("express");
 const {createTodo, updateTodo} = require("./types")
 const mongoose = require("mongoose");
+const cors = require("cors")
 const { Todo } = require("./db");
 
 const app = express();
 const {PORT} = require("./config/index");
 
 app.use(express.json());
+app.use(cors());
 
 // body {
 //     title: string,
